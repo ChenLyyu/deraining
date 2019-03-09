@@ -20,7 +20,7 @@ from skimage.measure import compare_psnr, compare_ssim
 parser = argparse.ArgumentParser()
 parser.add_argument("--mode", type=int, help="0 re-train, 1 continue")
 parser.add_argument("--input_dir", help="path to folder containing images")
-parser.add_argument("--test_dir", help="path to folder containing test images")
+parser.add_argument("--test_dir", required=True, help="path to folder containing test images")
 parser.add_argument("--output_dir", required=True, help="where to put output files (for testset)")
 parser.add_argument("--seed", type=int)
 parser.add_argument("--checkpoint", required=True, help="directory with checkpoint to resume training from or use for testing")
@@ -419,7 +419,7 @@ def main():
     targets_test = examples_test.targets
     inputs_test = examples_test.inputs
 
-    
+
 
     def convert(image):
         if a.aspect_ratio != 1.0:
