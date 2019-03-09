@@ -392,6 +392,10 @@ def append_index(filesets, step=False):
 
 
 def main():
+
+    generator_loss_L1 = []
+    discriminator_loss = []
+    generator_loss_GAN = []
     max_ssim,max_psnr=0,0
     if a.seed is None:
         a.seed = random.randint(0, 2**31 - 1)
@@ -520,7 +524,9 @@ def main():
                     print("discrim_loss", results["discrim_loss"])
                     print("gen_loss_GAN", results["gen_loss_GAN"])
                     print("gen_loss_L1", results["gen_loss_L1"])
-
+                    generator_loss_L1.append(results["gen_loss_L1"])
+                    generator_loss_GAN.append(results["gen_loss_GAN"])
+                    discriminator_loss.append(results["discrim_loss"])
                 if sv.should_stop():
                     break
             # testing

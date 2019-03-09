@@ -804,6 +804,8 @@ def main():
                     print("saving model")
                     print("saving loss")
                     np.save("gen_loss_L1.npy",np.array(generator_loss_L1))
+                    np.save("gen_loss_GAN.npy",np.array(generator_loss_GAN))
+                    np.save("discrim_loss.npy",np.array(discriminator_loss))
                     saver.save(sess, os.path.join(a.output_dir, "model"), global_step=sv.global_step)
 
                 if sv.should_stop():
