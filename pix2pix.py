@@ -29,6 +29,7 @@ parser.add_argument("--max_epochs", type=int, help="number of training epochs")
 parser.add_argument("--summary_freq", type=int, default=100, help="update summaries every summary_freq steps")
 parser.add_argument("--progress_freq", type=int, default=430, help="display progress every progress_freq steps")
 parser.add_argument("--trace_freq", type=int, default=0, help="trace execution every trace_freq steps")
+parser.add_argument("--save_freq", type=int, default=5000, help="save model every save_freq steps, 0 to disable")
 
 parser.add_argument("--separable_conv", action="store_true", help="use separable convolutions in the generator")
 parser.add_argument("--aspect_ratio", type=float, default=1.0, help="aspect ratio of output images (width/height)")
@@ -549,5 +550,14 @@ def main():
                 max_psnr=np.mean(PSNRs)
                 print("--------------saving model----------------")
                 saver.save(sess, os.path.join(a.checkpoint, "model"), global_step=sv.global_step)
+
+            if should(a.save_freq):
+                num = int(fetches["global_step"]/a.save_freq)
+                np.save("gen_loss_L1%d.npy"%num,np.array(generator_loss_L1))
+                np.save("gen_loss_GAN%d.npy"%num,np.array(generator_loss_GAN))
+                np.save("discrim_loss%d.npy"%num,np.array(discriminator_loss))
+
+
+
 
 main()
