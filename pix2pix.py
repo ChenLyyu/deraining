@@ -552,7 +552,7 @@ def main():
                 saver.save(sess, os.path.join(a.checkpoint, "model"), global_step=sv.global_step)
 
             if should(a.save_freq):
-                num = int(fetches["global_step"]/a.save_freq)
+                num = int(results["global_step"]/a.save_freq)
                 np.save("gen_loss_L1%d.npy"%num,np.array(generator_loss_L1))
                 np.save("gen_loss_GAN%d.npy"%num,np.array(generator_loss_GAN))
                 np.save("discrim_loss%d.npy"%num,np.array(discriminator_loss))
