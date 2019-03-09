@@ -801,7 +801,7 @@ def main():
                     discriminator_loss.append(results["discrim_loss"])
 
                 if should(a.save_freq):
-                    num = int(fetches["global_step"]/a.save_freq)
+                    num = int(results["global_step"]/a.save_freq)
 
                     print("saving model")
                     print("saving loss")
