@@ -19,7 +19,7 @@ from skimage.measure import compare_psnr, compare_ssim
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--mode", type=int, help="0 re-train, 1 continue")
-parser.add_argument("--input_dir", help="path to folder containing images")
+parser.add_argument("--input_dir", required=True, help="path to folder containing images")
 parser.add_argument("--test_dir", required=True, help="path to folder containing test images")
 parser.add_argument("--output_dir", required=True, help="where to put output files (for testset)")
 parser.add_argument("--seed", type=int)
@@ -29,21 +29,17 @@ parser.add_argument("--max_epochs", type=int, help="number of training epochs")
 parser.add_argument("--summary_freq", type=int, default=100, help="update summaries every summary_freq steps")
 parser.add_argument("--progress_freq", type=int, default=430, help="display progress every progress_freq steps")
 parser.add_argument("--trace_freq", type=int, default=0, help="trace execution every trace_freq steps")
-parser.add_argument("--save_freq", type=int, default=5000, help="save model every save_freq steps, 0 to disable")
 
 parser.add_argument("--separable_conv", action="store_true", help="use separable convolutions in the generator")
 parser.add_argument("--aspect_ratio", type=float, default=1.0, help="aspect ratio of output images (width/height)")
 parser.add_argument("--batch_size", type=int, default=1, help="number of images in batch")
 parser.add_argument("--ngf", type=int, default=64, help="number of generator filters in first conv layer")
 parser.add_argument("--ndf", type=int, default=64, help="number of discriminator filters in first conv layer")
-parser.add_argument("--scale_size", type=int, default=286, help="scale images to this size before cropping to 256x256")
-parser.add_argument("--flip", dest="flip", action="store_true", help="flip images horizontally")
-parser.add_argument("--no_flip", dest="flip", action="store_false", help="don't flip images horizontally")
-parser.set_defaults(flip=True)
 parser.add_argument("--lr", type=float, default=0.0002, help="initial learning rate for adam")
 parser.add_argument("--beta1", type=float, default=0.5, help="momentum term of adam")
 parser.add_argument("--l1_weight", type=float, default=100.0, help="weight on L1 term for generator gradient")
 parser.add_argument("--gan_weight", type=float, default=1.0, help="weight on GAN term for generator gradient")
+
 
 # export options
 parser.add_argument("--output_filetype", default="png", choices=["png", "jpeg"])
@@ -97,7 +93,7 @@ def batchnorm(inputs):
     return tf.layers.batch_normalization(inputs, axis=3, epsilon=1e-5, momentum=0.1, training=True, gamma_initializer=tf.random_normal_initializer(1.0, 0.02))
 
 
-def load_examples(d):
+def load_examples(d, augement):
     if d is None or not os.path.exists(d):
         raise Exception("input_dir does not exist")
 
@@ -143,19 +139,10 @@ def load_examples(d):
     seed = random.randint(0, 2**31 - 1)
     def transform(image):
         r = image
-        r = tf.image.random_brightness(image = r, max_delta = 0.3, seed = seed)
-        if a.flip:
+        if( augement ):
+            r = tf.image.random_brightness(image = r, max_delta = 0.3, seed = seed)
             r = tf.image.random_flip_left_right(r, seed=seed)
-
-        # area produces a nice downscaling, but does nearest neighbor for upscaling
-        # assume we're going to be doing downscaling here
-        r = tf.image.resize_images(r, [a.scale_size, a.scale_size], method=tf.image.ResizeMethod.AREA)
-
-        offset = tf.cast(tf.floor(tf.random_uniform([2], 0, a.scale_size - CROP_SIZE + 1, seed=seed)), dtype=tf.int32)
-        if a.scale_size > CROP_SIZE:
-            r = tf.image.crop_to_bounding_box(r, offset[0], offset[1], CROP_SIZE, CROP_SIZE)
-        elif a.scale_size < CROP_SIZE:
-            raise Exception("scale size cannot be less than crop size")
+        r = tf.image.resize_images(r, [CROP_SIZE, CROP_SIZE], method=tf.image.ResizeMethod.AREA)
         return r
 
     with tf.name_scope("input_images"):
@@ -409,8 +396,8 @@ def main():
     with open(os.path.join(a.output_dir, "options.json"), "w") as f:
         f.write(json.dumps(vars(a), sort_keys=True, indent=4))
 
-    examples_train = load_examples(a.input_dir)
-    examples_test = load_examples(a.test_dir)
+    examples_train = load_examples(a.input_dir, True)
+    examples_test = load_examples(a.test_dir, False)
 
     # inputs and targets are [batch_size, height, width, channels]
     model_train = create_model(examples_train.inputs, examples_train.targets)
@@ -471,10 +458,26 @@ def main():
     sv = tf.train.Supervisor(logdir=logdir, save_summaries_secs=0, saver=None)
     with sv.managed_session() as sess:
 
+        max_steps=a.max_epochs*examples_train.steps_per_epoch
         if a.mode==1 and a.checkpoint is not None:
             checkpoint = tf.train.latest_checkpoint(a.checkpoint)
             saver.restore(sess, checkpoint)
-        max_steps=a.max_epochs*examples_train.steps_per_epoch
+            # testing
+            # at most, process the test data once
+            max_steps = min(examples_test.steps_per_epoch, max_steps)
+            SSIMs=[]
+            PSNRs=[]
+            for step in range(examples_test.steps_per_epoch):
+                results = sess.run(display_fetches)
+                SSIMs.append(results["ssim"])
+                PSNRs.append(results["psnr"])
+                filesets = save_images(results)
+                index_path = append_index(filesets)
+            print("---------------average psnr =", np.mean(PSNRs))
+            print("---------------average ssim =", np.mean(SSIMs))
+            max_ssim=np.mean(SSIMs)
+            max_psnr=np.mean(PSNRs)
+
         print("Training size =",examples_train.steps_per_epoch)
         print("Test size =",examples_test.steps_per_epoch)
         for i in range(a.max_epochs):
