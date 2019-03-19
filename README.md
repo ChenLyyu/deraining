@@ -85,7 +85,7 @@ Here is a direct result of our deraining model comparing with the result of arti
 
 #### Segmentation representation
 
-Then, we try to apply a pre-trained segmentation algorithm in order to evaluate qualitatively our deraining model.
+Then, we try to apply a pre-trained segmentation algorithm (https://github.com/CSAILVision/semantic-segmentation-pytorch) in order to evaluate qualitatively our deraining model.
 
 ![seg](https://github.com/ChenLyyu/deraining/blob/deraining/images/seg.jpg)
 
