@@ -63,7 +63,7 @@ Compared to original Pix2pix, we have several modifications as following:
 
 We have the loss function figure as following : 
 
-![loss](https://github.com/ChenLyyu/deraining/blob/deraining/images/loss.png)
+![loss](https://github.com/ChenLyyu/deraining/blob/deraining/images/loss.jpg)
 
 
 
