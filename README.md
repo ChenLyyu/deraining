@@ -20,7 +20,7 @@ https://drive.google.com/open?id=1e7R76s6vwUJxILOcAsthgDLPSnOrQ49K.
 
 The data comes from a stereo device that allows one lens to be affected by real water droplets while keeping the other lens clear. We have $861$ image pairs for training, and $239$ pairs for testing.
 
-![rainmaker](https://github.com/ChenLyyu/deraining/blob/deraining/images/rainmaker.jpg, style="zoom:50%")
+![width = "80%"](https://github.com/ChenLyyu/deraining/blob/deraining/images/rainmaker.jpg)
 
 This dataset is provided by https://github.com/rui1996/DeRaindrop, and we compare our results with the result of article "Attentive Generative Adversarial Network for Raindrop Removal from A Single Image (CVPR 2018)[1]" in the last section.
 
