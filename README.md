@@ -8,7 +8,7 @@ This project is a teamwork project proposed in the deep learning course MAP583 o
 
 The object of this project is quite simple : raindrops in images can severely hamper the quality of vision tasks, such as semantic segmentation, it is urgent to make out the deraining project.  In this project, we apply a generative network using adversarial training to remove the raindrops in an image, and compare the semantic segmentation’s results with de-rain image and raindrop image.
 
-![100_rain-inputs](/Users/lvchen/Downloads/3a/MAP583/GitHub/deraining/images/100_rain-inputs.png)![100_rain-targets](/Users/lvchen/Downloads/3a/MAP583/GitHub/deraining/images/100_rain-targets.png)
+![100_rain-inputs](https://github.com/ChenLyyu/deraining/blob/deraining/images/100_rain-inputs.png)![100_rain-targets](/Users/lvchen/Downloads/3a/MAP583/GitHub/deraining/images/100_rain-targets.png)
 
 
 
