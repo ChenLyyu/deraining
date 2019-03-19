@@ -18,7 +18,7 @@ The dataset can be found here :
 
 https://drive.google.com/open?id=1e7R76s6vwUJxILOcAsthgDLPSnOrQ49K. 
 
-The data comes from a stereo device that allows one lens to be affected by real water droplets while keeping the other lens clear. We have $861$ image pairs for training, and $239$ pairs for testing.
+The data comes from a stereo device that allows one lens to be affected by real water droplets while keeping the other lens clear. We have 861​ image pairs for training, and 239 pairs for testing.
 
 ![width = "80%"](https://github.com/ChenLyyu/deraining/blob/deraining/images/rainmaker.jpg)
 
@@ -42,7 +42,7 @@ The generator of cGAN is U-net, and the layer architecutre is as following :
 
 ##### Discriminator : PatchGAN
 
-Discriminator tries to classify if each $N × N$ patch in an image is real or fake. We run this discriminator convolutionally across the image, averaging all responses to provide the ultimate output of $D$.
+Discriminator tries to classify if each N × N​ patch in an image is real or fake. We run this discriminator convolutionally across the image, averaging all responses to provide the ultimate output of ​D​.
 
 ![discriminator](https://github.com/ChenLyyu/deraining/blob/deraining/images/discriminator.png)
 
