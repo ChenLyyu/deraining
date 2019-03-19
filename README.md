@@ -20,7 +20,7 @@ https://drive.google.com/open?id=1e7R76s6vwUJxILOcAsthgDLPSnOrQ49K.
 
 The data comes from a stereo device that allows one lens to be affected by real water droplets while keeping the other lens clear. We have $861$ image pairs for training, and $239$ pairs for testing.
 
-![rainmaker](https://github.com/ChenLyyu/deraining/blob/deraining/images/rainmaker.jpg)
+![rainmaker][width=0.4\linewidth](https://github.com/ChenLyyu/deraining/blob/deraining/images/rainmaker.jpg)
 
 This dataset is provided by https://github.com/rui1996/DeRaindrop, and we compare our results with the result of article "Attentive Generative Adversarial Network for Raindrop Removal from A Single Image (CVPR 2018)[1]" in the last section.
 
@@ -75,7 +75,7 @@ As for the metrics , we take classic PSNR and SSIM, and we have the correspondin
 
 And the quantitative estimation of metrics is : 
 
-![evaluation](/Users/lvchen/Downloads/3a/MAP583/GitHub/deraining/images/evaluation.jpg)
+![evaluation](https://github.com/ChenLyyu/deraining/blob/deraining/images/evaluation.jpg)
 
 #### Compared to article results 
 
